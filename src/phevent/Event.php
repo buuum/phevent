@@ -1,6 +1,6 @@
 <?php
 
-namespace phevent;
+namespace Buuum;
 
 class Event
 {

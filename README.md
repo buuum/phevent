@@ -26,7 +26,7 @@ You need PHP >= 5.5.0 to use Buuum\Event but the latest stable version of PHP is
 Buuum is available on Packagist and can be installed using Composer:
 
 ```
-composer require buuum/event
+composer require buuum/phevent
 ```
 
 ### Manually
