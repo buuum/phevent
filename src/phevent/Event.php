@@ -42,15 +42,16 @@ class Event
 
     /**
      * @param $event_name
-     * @param array $args
      * @return mixed
      */
-    public function fire($event_name, $args = [])
+    public function fire($event_name)
     {
         $listener = $this->ensureEventName($event_name);
 
-        $args = !empty($args) ? $args : func_get_args();
-        $arguments = $args + [$event_name];
+        $arguments = func_get_args();
+        $event_name = array_shift($arguments);
+        $arguments[] = $event_name;
+
         $method = ($this->resolver) ? $this->resolver->resolve($listener) : $listener;
 
         return call_user_func_array($method, $arguments);
@@ -63,7 +64,7 @@ class Event
     public static function eventFire($event_name)
     {
         $event = self::getInstance();
-        return $event->fire($event_name, func_get_args());
+        return $event->fire(...func_get_args());
     }
 
     /**
