@@ -50,7 +50,7 @@ class Event
         $listener = $this->ensureEventName($event_name);
 
         $args = !empty($args) ? $args : func_get_args();
-        $arguments = [$event_name] + $args;
+        $arguments = $args + [$event_name];
         $method = ($this->resolver) ? $this->resolver->resolve($listener) : $listener;
 
         return call_user_func_array($method, $arguments);

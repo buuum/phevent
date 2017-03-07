@@ -53,8 +53,12 @@ use Buuum\Event;
 
 return function(Event $event){
 
-    $event->addListener('email.send.confirm', function($event){
-        return $event;
+    $event->addListener('email.send.confirm', function(string $event_name){
+        return $event_name;
+    });
+    
+    $event->addListener('email.send.susbscribe', function($param1, $param2, string $event_name){
+        return $event_name;
     });
     
     $event->addListener('email.send.rememberme', [App\Example::class, 'sendremember']);
