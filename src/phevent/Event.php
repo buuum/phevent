@@ -42,13 +42,16 @@ class Event
 
     /**
      * @param $event_name
+     * @param array $args
      * @return mixed
      */
-    public function fire($event_name)
+    public function fire($event_name, $args = [])
     {
-        $arguments = [$event_name] + func_get_args();
+        $listener = $this->ensureEventName($event_name);
 
-        $method = ($this->resolver) ? $this->resolver->resolve($this->listeners[$event_name]) : $this->listeners[$event_name];
+        $args = !empty($args) ? $args : func_get_args();
+        $arguments = [$event_name] + $args;
+        $method = ($this->resolver) ? $this->resolver->resolve($listener) : $listener;
 
         return call_user_func_array($method, $arguments);
     }
@@ -60,7 +63,7 @@ class Event
     public static function eventFire($event_name)
     {
         $event = self::getInstance();
-        return $event->fire($event_name);
+        return $event->fire($event_name, func_get_args());
     }
 
     /**
@@ -81,6 +84,19 @@ class Event
             return $listener;
         }
         throw new \InvalidArgumentException('Listeners should be Closure or callable. Received type: ' . gettype($listener));
+    }
+
+    /**
+     * @param $event_name
+     * @return mixed
+     */
+    protected function ensureEventName($event_name)
+    {
+        if (!isset($this->listeners[$event_name])) {
+            throw new \InvalidArgumentException("The event $event_name doesn't exist.");
+        }
+
+        return $this->listeners[$event_name];
     }
 
     /**
